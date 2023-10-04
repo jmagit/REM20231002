@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 
 import com.example.domains.contracts.repositories.ActorRepository;
 import com.example.domains.entities.Actor;
+import com.example.domains.entities.dtos.ActorDTO;
 
 import jakarta.transaction.Transactional;
 
@@ -61,7 +62,8 @@ public class DemoApplication implements CommandLineRunner {
 //			dao.save(actor);
 //			dao.findNovedadesSQL(200).forEach(System.out::println);
 ////		}
-
+//		dao.findAll().forEach(e -> System.out.println(ActorDTO.from(e)));
+		dao.getByActorIdGreaterThan(200).forEach(e -> System.out.println(e));
 	}
 	
 	@Transactional

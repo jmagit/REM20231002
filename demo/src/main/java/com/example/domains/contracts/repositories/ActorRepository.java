@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.domains.core.contracts.repositories.ProjectionsAndSpecificationJpaRepository;
 import com.example.domains.entities.Actor;
+import com.example.domains.entities.dtos.ActorDTO;
+import com.example.domains.entities.dtos.ActorShort;
 
 
 public interface ActorRepository extends ProjectionsAndSpecificationJpaRepository<Actor, Integer> { // JpaRepository<Actor, Integer>, JpaSpecificationExecutor<Actor> {
@@ -20,7 +22,11 @@ public interface ActorRepository extends ProjectionsAndSpecificationJpaRepositor
 	List<Actor> findNovedadesJPQL(int id);
 	@Query(value = "select * from actor where actor_id > :id", nativeQuery = true)
 	List<Actor> findNovedadesSQL(@Param("id") int id);
-	
+
+	List<ActorDTO> getByActorIdGreaterThan(int id);
+	List<ActorShort> readByActorIdGreaterThan(int id);
+	<T> List<T> queryByActorIdGreaterThan(int id, Class<T> tipo);
+
 	default void algo() {
 		
 	}
