@@ -88,7 +88,6 @@ public class ActorServiceImpl implements ActorService {
 	@Override
 	public void deleteById(Integer id) {
 		dao.deleteById(id);
-
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.domain.Sort;
 
 import com.example.domains.contracts.repositories.ActorRepository;
+import com.example.domains.contracts.services.ActorService;
 import com.example.domains.entities.Actor;
 import com.example.domains.entities.dtos.ActorDTO;
 import com.example.domains.entities.dtos.ActorShort;
@@ -20,8 +21,11 @@ public class DemoApplication implements CommandLineRunner {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
-	@Autowired
-	ActorRepository dao;
+//	@Autowired
+//	ActorRepository dao;
+	
+//	@Autowired
+//	ActorService srv;
 	
 	@Override
 	@Transactional
@@ -66,9 +70,11 @@ public class DemoApplication implements CommandLineRunner {
 //		dao.findAll().forEach(e -> System.out.println(ActorDTO.from(e)));
 //		dao.getByActorIdGreaterThan(200).forEach(e -> System.out.println(e));
 //		dao.readByActorIdGreaterThan(200).forEach(e -> System.out.println(e.getActorId() + " " + e.getNombre()));
-		dao.queryByActorIdGreaterThan(200, ActorDTO.class).forEach(e -> System.out.println(e));
-		dao.queryByActorIdGreaterThan(200, ActorShort.class).forEach(e -> System.out.println(e.getActorId() + " " + e.getNombre()));
-		dao.queryByActorIdGreaterThan(200, Actor.class).forEach(e -> System.out.println(e));
+//		dao.queryByActorIdGreaterThan(200, ActorDTO.class).forEach(e -> System.out.println(e));
+//		dao.queryByActorIdGreaterThan(200, ActorShort.class).forEach(e -> System.out.println(e.getActorId() + " " + e.getNombre()));
+//		dao.queryByActorIdGreaterThan(200, Actor.class).forEach(e -> System.out.println(e));
+//		srv.add(new Actor(1, "PP", "PP"));
+//		srv.getByProjection(ActorShort.class).forEach(e -> System.out.println(e.getActorId() + " " + e.getNombre()));
 	}
 	
 	@Transactional
