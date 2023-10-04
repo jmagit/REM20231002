@@ -1,14 +1,18 @@
 package com.example.application.resources;
 
 import java.net.URI;
+import java.sql.Timestamp;
 import java.util.List;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import jakarta.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,11 +27,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.domains.contracts.services.ActorService;
+import com.example.domains.entities.Film;
 import com.example.domains.entities.dtos.ActorDTO;
+import com.example.domains.entities.dtos.ActorShort;
 import com.example.exceptions.BadRequestException;
 import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.NotFoundException;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.springframework.http.HttpStatus;
 
@@ -38,8 +46,13 @@ public class ActorResource {
 	private ActorService srv;
 
 	@GetMapping
-	public List<ActorDTO> getAll() {
-		return srv.getByProjection(ActorDTO.class);
+	public List<ActorShort> getAll() {
+		return srv.getByProjection(ActorShort.class);
+	}
+
+	@GetMapping(params = "page")
+	public Page<ActorDTO> getAll(Pageable pageable) {
+		return srv.getByProjection(pageable, ActorDTO.class);
 	}
 
 	@GetMapping(path = "/{id}")
@@ -48,6 +61,18 @@ public class ActorResource {
 		if(item.isEmpty())
 			throw new NotFoundException();
 		return ActorDTO.from(item.get());
+	}
+	
+	record Peli(int id, @JsonProperty("titulo") String title, 
+			@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss") Timestamp lastUpdate) {}
+	
+	@GetMapping(path = "/{id}/pelis")
+	@Transactional
+	public List<Peli> getPelis(@PathVariable int id) throws NotFoundException {
+		var item = srv.getOne(id);
+		if(item.isEmpty())
+			throw new NotFoundException();
+		return item.get().getFilmActors().stream().map(e -> new Peli( e.getFilm().getFilmId(), e.getFilm().getTitle(), e.getFilm().getLastUpdate())).toList();
 	}
 	
 	@PostMapping
@@ -70,6 +95,13 @@ public class ActorResource {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable int id) {
 		srv.deleteById(id);
+	}
+
+
+	@PostMapping("/premios")
+	@ResponseStatus(HttpStatus.ACCEPTED)
+	public void repartoDePremios() {
+		srv.repartoDePremios();
 	}
 }
 
