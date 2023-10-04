@@ -2,6 +2,8 @@ package com.example.domains.entities.dtos;
 
 import com.example.domains.entities.Actor;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Value;
@@ -10,6 +12,8 @@ import lombok.Value;
 public class ActorDTO {
 	private int actorId;
 	private String firstName;
+	@NotBlank
+	@Size(max=45, min=2)
 	private String lastName;
 
 	public static ActorDTO from(Actor source) {
