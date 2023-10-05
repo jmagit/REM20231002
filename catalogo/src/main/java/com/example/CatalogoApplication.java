@@ -36,7 +36,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
                 license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0.html"),
                 contact = @Contact(name = "Javier Martín", url = "https://github.com/jmagit", email = "support@example.com")
         ),
-        externalDocs = @ExternalDocumentation(description = "Documentación del proyecto", url = "https://github.com/jmagit/REM20230911")
+        externalDocs = @ExternalDocumentation(description = "Documentación del proyecto", url = "https://github.com/jmagit/REM20231002")
 )
 @SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 @EnableFeignClients(basePackages = "com.example.application.proxies")

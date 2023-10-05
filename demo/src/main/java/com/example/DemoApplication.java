@@ -1,19 +1,23 @@
 package com.example;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.domain.Sort;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.web.client.RestTemplate;
 
-import com.example.domains.contracts.repositories.ActorRepository;
-import com.example.domains.contracts.services.ActorService;
-import com.example.domains.entities.Actor;
-import com.example.domains.entities.dtos.ActorDTO;
-import com.example.domains.entities.dtos.ActorShort;
-
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.transaction.Transactional;
 
+@EnableDiscoveryClient
+@EnableFeignClients("com.example.application.proxies")
+@SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 @SpringBootApplication
 public class DemoApplication implements CommandLineRunner {
 
@@ -82,5 +86,35 @@ public class DemoApplication implements CommandLineRunner {
 		// actores
 		// peliculas
 	}
+	
+	@Bean
+	@Primary
+	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+		return builder.build();
+	}
+
+	@Bean
+	@LoadBalanced
+	public RestTemplate restTemplateLB(RestTemplateBuilder builder) {
+		return builder.build();
+	}
+
+	/*
+	@Autowired
+	private LoadBalancedExchangeFilterFunction filterFunction;
+
+	@Bean
+	WebClient webClient() {
+		return WebClient.builder().baseUrl("http://CATALOGO-SERVICE/").filter(filterFunction).build();
+	}
+
+	@Bean
+	ActoresProxy actoresProxy(WebClient webClient) {
+		HttpServiceProxyFactory httpServiceProxyFactory = HttpServiceProxyFactory
+				.builder(WebClientAdapter.forClient(webClient)).build();
+		return httpServiceProxyFactory.createClient(ActoresProxy.class);
+	}
+
+	 */
 
 }
