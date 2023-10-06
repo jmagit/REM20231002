@@ -82,7 +82,7 @@ public class CotillaResource {
 	
 	@GetMapping(path = "/balancea/rt")
 	@SecurityRequirement(name = "bearerAuth")
-//	@PreAuthorize("hasRole('ROLE_ADMINISTRADORES')")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRADORES')")
 	public List<String> getBalanceoRT() {
 		List<String> rslt = new ArrayList<>();
 		LocalDateTime inicio = LocalDateTime.now();
