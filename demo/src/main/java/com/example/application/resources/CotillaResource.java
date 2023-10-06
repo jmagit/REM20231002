@@ -82,7 +82,7 @@ public class CotillaResource {
 	
 	@GetMapping(path = "/balancea/rt")
 	@SecurityRequirement(name = "bearerAuth")
-	@PreAuthorize("hasRole('ROLE_ADMINISTRADORES')")
+//	@PreAuthorize("hasRole('ROLE_ADMINISTRADORES')")
 	public List<String> getBalanceoRT() {
 		List<String> rslt = new ArrayList<>();
 		LocalDateTime inicio = LocalDateTime.now();
@@ -99,10 +99,18 @@ public class CotillaResource {
 		rslt.add("Final: " + fin + " (" + inicio.until(fin, ChronoUnit.MILLIS) + " ms)");		
 		return rslt;
 	}
-	@GetMapping(path = "/pelis/rt")
-	public List<PelisDto> getPelisRT() {
-//		ResponseEntity<List<PelisDto>> response = srv.exchange(
-//				"http://localhost:8010/peliculas/v1?mode=short", 
+	@GetMapping(path = "/pelis/rt-http")
+	public List<PelisDto> getPelisRT1() {
+		ResponseEntity<List<PelisDto>> response = srv.exchange(
+				"http://localhost:8010/peliculas/v1?mode=short", 
+				HttpMethod.GET,
+				HttpEntity.EMPTY, 
+				new ParameterizedTypeReference<List<PelisDto>>() {}
+		);
+		return response.getBody();
+	}
+	@GetMapping(path = "/pelis/rt-lb")
+	public List<PelisDto> getPelisRT2() {
 		ResponseEntity<List<PelisDto>> response = srvLB.exchange(
 				"lb://CATALOGO-SERVICE/peliculas/v1?mode=short", 
 				HttpMethod.GET,
@@ -111,10 +119,13 @@ public class CotillaResource {
 		);
 		return response.getBody();
 	}
-	@GetMapping(path = "/pelis/{id}/rt")
-	public PelisDto getPelisRT(@PathVariable int id) {
+	@GetMapping(path = "/pelis/{id}/rt-http")
+	public PelisDto getPelisRT1(@PathVariable int id) {
+		return srv.getForObject("http://localhost:8010/peliculas/v1/{key}?mode=short", PelisDto.class, id);
+	}
+	@GetMapping(path = "/pelis/{id}/rt-lb")
+	public PelisDto getPelisRT2(@PathVariable int id) {
 		return srvLB.getForObject("lb://CATALOGO-SERVICE/peliculas/v1/{key}?mode=short", PelisDto.class, id);
-//		return srv.getForObject("http://localhost:8010/peliculas/v1/{key}?mode=short", PelisDto.class, id);
 	}
 	
 	@Autowired
