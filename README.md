@@ -85,6 +85,8 @@
         - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
         - KAFKA_CLUSTERS_0_ZOOKEEPER=localhost:2181
 
+- cd docker-compose\kafka && docker compose up
+
 ### Monitorización (Prometheus/Grafana)
 
 - docker run -d -p 9090:9090 --name prometheus -v $PWD/config-dir/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
